@@ -8,7 +8,7 @@
 import datetime
 import hashlib
 import json
-        
+
 
 class ParkChain:
     def __init__(self):
@@ -32,31 +32,37 @@ class ParkChain:
         h_difficulty = hashlib.sha256(str(self.difficulty).encode()).hexdigest()
         h_timestamp = hashlib.sha256(str(timestamp).encode()).hexdigest()
         h_content = hashlib.sha256(content.encode()).hexdigest()
-        
+
         # header without the nonce (all concatenated and hashed)
-        header = hashlib.sha256((f'{previous_hash}{h_timestamp}{h_version}{h_difficulty}{h_content}').encode()).hexdigest()
+        header = hashlib.sha256(
+            (
+                f"{previous_hash}{h_timestamp}{h_version}{h_difficulty}{h_content}"
+            ).encode()
+        ).hexdigest()
 
         # proof of work (finding a nonce)
         nonce = 1
         found_nonce = False
 
         while found_nonce is False:
-            test_hash = hashlib.sha256(str(nonce).encode() + header.encode()).hexdigest()
-            if test_hash[:self.difficulty] == self.difficulty * "0":
+            test_hash = hashlib.sha256(
+                str(nonce).encode() + header.encode()
+            ).hexdigest()
+            if test_hash[: self.difficulty] == self.difficulty * "0":
                 found_nonce = True
             else:
                 nonce += 1
 
         # new block data
         new_block = {
-            'number': len(self.chain),
-            'age': self.age,
-            'version': self.version,
-            'difficulty': self.difficulty,
-            'timestamp': timestamp,
-            'previous_hash': previous_hash,
-            'content': content,
-            'nonce': nonce,
+            "number": len(self.chain),
+            "age": self.age,
+            "version": self.version,
+            "difficulty": self.difficulty,
+            "timestamp": timestamp,
+            "previous_hash": previous_hash,
+            "content": content,
+            "nonce": nonce,
         }
 
         # adjust the parameters
