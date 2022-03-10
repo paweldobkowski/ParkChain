@@ -29,14 +29,20 @@ class ParkChain:
         timestamp = str(datetime.datetime.now())
 
         h_version = hashlib.sha256(str(self.version).encode()).hexdigest()
-        h_difficulty = hashlib.sha256(str(self.difficulty).encode()).hexdigest()
+        h_difficulty = hashlib.sha256(
+            str(self.difficulty).encode()
+            ).hexdigest()
         h_timestamp = hashlib.sha256(str(timestamp).encode()).hexdigest()
         h_content = hashlib.sha256(content.encode()).hexdigest()
 
         # header without the nonce (all concatenated and hashed)
         header = hashlib.sha256(
             (
-                f"{previous_hash}{h_timestamp}{h_version}{h_difficulty}{h_content}"
+                f"{previous_hash}\
+                {h_timestamp}\
+                {h_version}\
+                {h_difficulty}\
+                {h_content}"
             ).encode()
         ).hexdigest()
 
@@ -86,7 +92,11 @@ class ParkChain:
     def get_previous_hash(self):
         previous_block = self.get_previous_block()
 
-        previous_block_encoded = json.dumps(previous_block, sort_keys=True).encode()
-        previous_block_hash = hashlib.sha256(previous_block_encoded).hexdigest()
+        previous_block_encoded = json.dumps(
+            previous_block, sort_keys=True
+            ).encode()
+        previous_block_hash = hashlib.sha256(
+            previous_block_encoded
+            ).hexdigest()
 
         return previous_block_hash
